@@ -1,0 +1,467 @@
+/* ===== ESTILO GERAL ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+body {
+    background-color: #0f1114;
+    color: #e4e4e4;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.view-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* MENU LATERAL */
+aside {
+    width: 260px;
+    background: linear-gradient(180deg, #15161a 0%, #0f1013 100%);
+    border-right: 1px solid #1c1d22;
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    overflow-y: auto;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.55);
+}
+
+/* ESCONDER SCROLLBAR PARA WEBKIT (Chrome, Edge, Safari) */
+aside::-webkit-scrollbar {
+    width: 0px;
+}
+
+aside::-webkit-scrollbar-thumb {
+    background: transparent;
+}
+
+aside::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+aside h2 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-align: center;
+    color: #f3f4f6;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
+}
+
+.script-btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 7px 10px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02);
+    color: #d1d5db;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.22s ease;
+    backdrop-filter: blur(4px);
+}
+
+.script-btn:hover {
+    background: rgba(80, 145, 255, 0.1);
+    border-color: rgba(100, 160, 255, 0.2);
+    color: #fff;
+    transform: translateX(3px);
+    box-shadow: 0 0 10px rgba(90, 155, 255, 0.25), 0 2px 8px rgba(0, 0, 0, 0.35), inset 0 0 6px rgba(90, 155, 255, 0.15);
+}
+
+/* ÁREA PRINCIPAL */
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 16px;
+    position: relative;
+}
+
+#contentArea,
+#homeContentArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+header h1 {
+    font-size: 1.05rem;
+    color: #fff;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    background-color: #1f1f1f;
+    border: 1px solid #2d2d2d;
+    color: #ccc;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
+.btn-main {
+    color: #60a5fa;
+}
+
+.btn-home {
+    background: rgba(167, 139, 250, 0.1);
+    color: #a78bfa;
+    border-color: rgba(167, 139, 250, 0.2);
+}
+
+.btn-home:hover {
+    background: rgba(167, 139, 250, 0.2);
+}
+
+textarea {
+    flex: 1;
+    background-color: #181818;
+    border: 1px solid #2a2a2a;
+    color: #eaeaea;
+    border-radius: 6px;
+    padding: 14px;
+    font-size: 1rem;
+    resize: none;
+    font-family: 'Fira Code', monospace;
+    outline: none;
+    line-height: 1.5;
+    margin-top: 8px;
+}
+
+/* HOME AREA */
+#homeArea {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #121212;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.home-welcome {
+    text-align: center;
+    padding: 2rem;
+}
+
+.home-welcome h2 {
+    font-size: 1.8rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.home-welcome p {
+    color: #9ca3af;
+    margin-bottom: 2rem;
+}
+
+.home-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.stat-card {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #333;
+    min-width: 150px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card span {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #60a5fa;
+    margin-bottom: 5px;
+}
+
+.stat-card label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+footer.copyright {
+    text-align: center;
+    padding: 14px 0;
+    font-size: 0.85rem;
+    color: #cfcfcf;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 20px;
+    backdrop-filter: blur(3px);
+    background: rgba(255, 255, 255, 0.02);
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.08);
+}
+
+/* POPUP NOVO SCRIPT */
+#popupOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 9999;
+}
+
+#popupBox {
+    width: 440px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 120px auto;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.08);
+    animation: floatIn 0.25s ease-out;
+}
+
+#popupBox h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+#newScriptTitle,
+#newScriptText {
+    width: 100%;
+    padding: 10px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #333;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+#newScriptText {
+    height: 150px;
+    resize: none;
+}
+
+.popup-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* POPUP DO SINO */
+.hidden {
+    display: none !important;
+}
+
+#dailyPopup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+#dailyPopup .popup-content {
+    background: #111;
+    width: 560px;
+    max-width: 92%;
+    padding: 28px;
+    border: 1px solid #444;
+    border-radius: 16px;
+    box-shadow: 0 0 35px rgba(255, 255, 255, 0.12);
+    animation: floatIn 0.25s ease;
+}
+
+#dailyPopup h3 {
+    text-align: center;
+    margin-bottom: 16px;
+    color: #fff;
+    font-size: 1.25rem;
+}
+
+#dailyPopup textarea {
+    width: 100%;
+    height: 180px;
+    background: #1a1a1a;
+    color: #fff;
+    border: 1px solid #2d2d2d;
+    border-radius: 10px;
+    padding: 12px;
+    resize: none;
+    margin-bottom: 14px;
+    font-size: 0.95rem;
+}
+
+#dailyPopup .popup-actions {
+    display: flex;
+    gap: 12px;
+}
+
+#dailyPopup .popup-btn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid #2a2b31;
+    color: #d6deee;
+    font-weight: 500;
+    background: linear-gradient(180deg, #18191d, #121317);
+    transition: all 0.25s ease;
+}
+
+#dailyPopup .popup-btn.salvar:hover {
+    color: #b3ffd6;
+}
+
+#dailyPopup .popup-btn.cancelar:hover {
+    color: #ffc0c0;
+}
+
+/* ===== BOTÃO DO SINO PULSANTE ===== */
+.has-remember {
+    position: relative;
+    z-index: 1;
+    animation: bellShake 1.6s ease-in-out infinite, pulseGlow 2s ease-in-out infinite;
+}
+
+.has-remember::before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border-radius: 50%;
+    background: rgba(90, 155, 255, 0.3);
+    z-index: -1;
+    filter: blur(8px);
+    opacity: 0.7;
+}
+
+@keyframes pulseGlow {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.5;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(0.95);
+        opacity: 0.5;
+    }
+}
+
+@keyframes bellShake {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    20% {
+        transform: rotate(-8deg);
+    }
+
+    40% {
+        transform: rotate(8deg);
+    }
+
+    60% {
+        transform: rotate(-6deg);
+    }
+
+    80% {
+        transform: rotate(6deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+
+/* BOTÕES ESPECÍFICOS */
+.btn-new {
+    color: #4ade80;
+}
+
+/* Verde suave */
+.btn-copy {
+    color: #facc15;
+}
+
+/* Amarelo */
+.btn-save {
+    color: #60a5fa;
+}
+
+/* Azul */
+.btn-clear {
+    color: #f87171;
+}
+
+/* Vermelho */
+
+.btn-new:hover,
+.btn-copy:hover,
+.btn-save:hover,
+.btn-clear:hover {
+    color: #ffffff;
+    /* Cor branca ao passar o mouse */
+}
