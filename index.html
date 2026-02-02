@@ -9,88 +9,90 @@
   <link rel="icon" href="/img/logo5.png">
 </head>
 
-<div id="mainView" class="view-container">
-  <aside id="mainAside">
-    <h2>🧠 Central de Scripts 🧠</h2>
-  </aside>
+<body>
+  <div id="mainView" class="view-container">
+    <aside id="mainAside">
+      <h2>🧠 Central de Scripts 🧠</h2>
+    </aside>
 
-  <main>
-    <header>
-      <h1>🧾 Editor Principal 🧾</h1>
-      <div class="controls">
-        <button class="btn btn-daily" id="dailyBtn">🔔</button>
-        <button class="btn btn-home" id="homeBtn">🏠 HOME</button>
-        <button class="btn btn-new" id="newBtn">➕ Novo</button>
-        <button class="btn btn-copy" id="copyBtn">📋 Copiar</button>
-        <button class="btn btn-save" id="saveBtn">💾 Salvar</button>
-        <button class="btn btn-clear" id="clearBtn">🗑️ Excluir</button>
+    <main>
+      <header>
+        <h1>🧾 Editor Principal 🧾</h1>
+        <div class="controls">
+          <button class="btn btn-daily" id="dailyBtn">🔔</button>
+          <button class="btn btn-home" id="homeBtn">🏠 HOME</button>
+          <button class="btn btn-new" id="newBtn">➕ Novo</button>
+          <button class="btn btn-copy" id="copyBtn">📋 Copiar</button>
+          <button class="btn btn-save" id="saveBtn">💾 Salvar</button>
+          <button class="btn btn-clear" id="clearBtn">🗑️ Excluir</button>
+        </div>
+      </header>
+
+      <div id="contentArea">
+        <textarea id="editor" placeholder="Selecione um script ou escreva o seu aqui..."></textarea>
       </div>
-    </header>
 
-    <div id="contentArea">
-      <textarea id="editor" placeholder="Selecione um script ou escreva o seu aqui..."></textarea>
-    </div>
+      <footer class="copyright">
+        © 2025 Lucas Pedro — InovaStack. Todos os direitos reservados.
+      </footer>
+    </main>
+  </div>
 
-    <footer class="copyright">
-      © 2025 Lucas Pedro — InovaStack. Todos os direitos reservados.
-    </footer>
-  </main>
-</div>
+  <!-- SEGUNDA ABA (HOME) -->
+  <div id="homeView" class="view-container hidden">
+    <aside id="homeAside">
+      <h2>🏠 Meus Scripts Home 🏠</h2>
+    </aside>
 
-<!-- SEGUNDA ABA (HOME) -->
-<div id="homeView" class="view-container hidden">
-  <aside id="homeAside">
-    <h2>🏠 Meus Scripts Home 🏠</h2>
-  </aside>
+    <main>
+      <header>
+        <h1>🏠 Área Home 🏠</h1>
+        <div class="controls">
+          <button class="btn btn-main" id="backToMainBtn">⬅️ Voltar ao Editor</button>
+          <button class="btn btn-new" id="newHomeBtn">➕ Novo Script Home</button>
+          <button class="btn btn-copy" id="copyHomeBtn">📋 Copiar</button>
+          <button class="btn btn-save" id="saveHomeBtn">💾 Salvar</button>
+          <button class="btn btn-clear" id="clearHomeBtn">🗑️ Excluir</button>
+        </div>
+      </header>
 
-  <main>
-    <header>
-      <h1>🏠 Área Home 🏠</h1>
-      <div class="controls">
-        <button class="btn btn-main" id="backToMainBtn">⬅️ Voltar ao Editor</button>
-        <button class="btn btn-new" id="newHomeBtn">➕ Novo Script Home</button>
-        <button class="btn btn-copy" id="copyHomeBtn">📋 Copiar</button>
-        <button class="btn btn-save" id="saveHomeBtn">💾 Salvar</button>
-        <button class="btn btn-clear" id="clearHomeBtn">🗑️ Excluir</button>
+      <div id="homeContentArea">
+        <textarea id="homeEditor"
+          placeholder="Esta é sua área privativa. Salve seus scripts pessoais aqui..."></textarea>
       </div>
-    </header>
 
-    <div id="homeContentArea">
-      <textarea id="homeEditor" placeholder="Esta é sua área privativa. Salve seus scripts pessoais aqui..."></textarea>
-    </div>
+      <footer class="copyright">
+        © 2025 Lucas Pedro — InovaStack. Todos os direitos reservados.
+      </footer>
+    </main>
+  </div>
 
-    <footer class="copyright">
-      © 2025 Lucas Pedro — InovaStack. Todos os direitos reservados.
-    </footer>
-  </main>
-</div>
-
-<!-- POPUP NOVO SCRIPT -->
-<div id="popupOverlay">
-  <div id="popupBox">
-    <h2>Novo Script</h2>
-    <input type="text" id="newScriptTitle" placeholder="Título do Script" />
-    <textarea id="newScriptText" placeholder="Digite o Script aqui..."></textarea>
-    <div class="popup-buttons">
-      <button id="saveNewScriptBtn" class="btn">💾 Salvar</button>
-      <button id="closePopupBtn" class="btn">❌ Cancelar</button>
+  <!-- POPUP NOVO SCRIPT -->
+  <div id="popupOverlay">
+    <div id="popupBox">
+      <h2>Novo Script</h2>
+      <input type="text" id="newScriptTitle" placeholder="Título do Script" />
+      <textarea id="newScriptText" placeholder="Digite o Script aqui..."></textarea>
+      <div class="popup-buttons">
+        <button id="saveNewScriptBtn" class="btn">💾 Salvar</button>
+        <button id="closePopupBtn" class="btn">❌ Cancelar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- POPUP DO SINO -->
-<div id="dailyPopup" class="hidden">
-  <div class="popup-content">
-    <h3>Alerta diários</h3>
-    <textarea id="dailyMessage" placeholder="Digite sua mensagem diária..."></textarea>
-    <div class="popup-actions">
-      <button id="saveDailyMsg" class="popup-btn salvar">Salvar</button>
-      <button id="closeDailyPopup" class="popup-btn cancelar">Cancelar</button>
+  <!-- POPUP DO SINO -->
+  <div id="dailyPopup" class="hidden">
+    <div class="popup-content">
+      <h3>Alerta diários</h3>
+      <textarea id="dailyMessage" placeholder="Digite sua mensagem diária..."></textarea>
+      <div class="popup-actions">
+        <button id="saveDailyMsg" class="popup-btn salvar">Salvar</button>
+        <button id="closeDailyPopup" class="popup-btn cancelar">Cancelar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script type="module" src="js/script.js"></script>
+  <script type="module" src="js/script.js"></script>
 </body>
 
 </html>
