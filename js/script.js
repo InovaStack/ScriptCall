@@ -1,115 +1,31 @@
 import { supabase } from './supabaseClient.js';
 
-// ELEMENTOS DE AUTH
-const authOverlay = document.getElementById("authOverlay");
-const mainApp = document.getElementById("mainApp");
-const loginForm = document.getElementById("loginForm");
-const signUpForm = document.getElementById("signUpForm");
-const toSignUp = document.getElementById("toSignUp");
-const toSignIn = document.getElementById("toSignIn");
-
-// INPUTS LOGIN
-const emailInput = document.getElementById("emailInput");
-const passwordInput = document.getElementById("passwordInput");
-const signInBtn = document.getElementById("signInBtn");
-
-// INPUTS CADASTRO
-const newNameInput = document.getElementById("newNameInput");
-const newEmailInput = document.getElementById("newEmailInput");
-const newPasswordInput = document.getElementById("newPasswordInput");
-const signUpBtn = document.getElementById("signUpBtn");
-
-// LOGOUT
-const logoutBtn = document.getElementById("logoutBtn");
-
-// APP STATE
-let currentUser = null;
-let currentWorkspace = 'main'; // 'main' ou 'home'
-let currentScriptId = null;
-
-// --- LOGICA DE AUTENTICAÇÃO ---
-
-// Alternar entre Login e Cadastro
-toSignUp.addEventListener("click", (e) => {
-    e.preventDefault();
-    loginForm.classList.add("hidden");
-    signUpForm.classList.remove("hidden");
-});
-
-toSignIn.addEventListener("click", (e) => {
-    e.preventDefault();
-    signUpForm.classList.add("hidden");
-    loginForm.classList.remove("hidden");
-});
-
-// Cadastrar
-signUpBtn.addEventListener("click", async () => {
-    const email = newEmailInput.value.trim();
-    const password = newPasswordInput.value.trim();
-    const name = newNameInput.value.trim();
-
-    if (!email || !password) return alert("Preencha e-mail e senha!");
-
-    const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: name } }
-    });
-
-    if (error) alert("Erro ao cadastrar: " + error.message);
-    else {
-        alert("Cadastro realizado! Verifique seu e-mail (se necessário) e faça login.");
-        toSignIn.click();
-    }
-});
-
-// Entrar
-signInBtn.addEventListener("click", async () => {
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) alert("Erro ao entrar: " + error.message);
-    else {
-        currentUser = data.user;
-        showApp();
-    }
-});
-
-// Sair
-logoutBtn.addEventListener("click", async () => {
-    await supabase.auth.signOut();
-    currentUser = null;
-    hideApp();
-});
-
-function showApp() {
-    authOverlay.classList.add("hidden");
-    mainApp.classList.remove("hidden");
-    loadCustomScripts();
-    loadDailyMessage();
-}
-
-function hideApp() {
-    authOverlay.classList.remove("hidden");
-    mainApp.classList.add("hidden");
-    document.querySelectorAll('.custom-script-btn').forEach(el => el.remove());
-}
-
-// --- LOGICA DO APP (REVISADA PARA USUÁRIOS) ---
-
+// ELEMENTOS - ÁREA PRINCIPAL
 const editor = document.getElementById("editor");
-const homeEditor = document.getElementById("homeEditor");
+const saveBtn = document.getElementById("saveBtn");
+const copyBtn = document.getElementById("copyBtn");
+const clearBtn = document.getElementById("clearBtn");
 const mainView = document.getElementById("mainView");
-const homeView = document.getElementById("homeView");
 const mainAside = document.getElementById("mainAside");
+
+// ELEMENTOS - ÁREA HOME
+const homeEditor = document.getElementById("homeEditor");
+const saveHomeBtn = document.getElementById("saveHomeBtn");
+const copyHomeBtn = document.getElementById("copyHomeBtn");
+const clearHomeBtn = document.getElementById("clearHomeBtn");
+const homeView = document.getElementById("homeView");
 const homeAside = document.getElementById("homeAside");
 
+// NAVEGAÇÃO
 const homeBtn = document.getElementById("homeBtn");
 const backToMainBtn = document.getElementById("backToMainBtn");
 
-// Navegação entre Workspaces
+const STORAGE_KEY = "blocoDeNotasLucasPedro_v2";
+const STORAGE_HOME_KEY = "blocoDeNotasLucasPedro_home";
+let currentScriptId = null;
+let currentWorkspace = 'main'; // 'main' ou 'home'
+
+// Alternar para Home
 homeBtn.addEventListener("click", () => {
     mainView.classList.add("hidden");
     homeView.classList.remove("hidden");
@@ -118,6 +34,7 @@ homeBtn.addEventListener("click", () => {
     loadCustomScripts();
 });
 
+// Alternar para Principal
 backToMainBtn.addEventListener("click", () => {
     homeView.classList.add("hidden");
     mainView.classList.remove("hidden");
@@ -126,102 +43,173 @@ backToMainBtn.addEventListener("click", () => {
     loadCustomScripts();
 });
 
+// Inserir texto no editor ativo
 function insertText(text, scriptId = null) {
     const activeEditor = currentWorkspace === 'main' ? editor : homeEditor;
+    const activeSaveBtn = currentWorkspace === 'main' ? saveBtn : saveHomeBtn;
+    const activeClearBtn = currentWorkspace === 'main' ? clearBtn : clearHomeBtn;
+    const key = currentWorkspace === 'main' ? STORAGE_KEY : STORAGE_HOME_KEY;
+
     activeEditor.value = text;
+    localStorage.setItem(key, text);
     currentScriptId = scriptId;
 
-    const activeSaveBtn = currentWorkspace === 'main' ? document.getElementById("saveBtn") : document.getElementById("saveHomeBtn");
-    if (scriptId) {
+    if (currentScriptId) {
         activeSaveBtn.innerText = "💾 Atualizar";
+        activeSaveBtn.style.backgroundColor = "#e67e22";
+        activeClearBtn.innerText = "🗑️ Excluir Script";
     } else {
         activeSaveBtn.innerText = "💾 Salvar";
+        activeSaveBtn.style.backgroundColor = "";
+        activeClearBtn.innerText = "🗑️ Excluir";
     }
 }
 
+// Botões de Salvar (Unificado)
 async function handleSave() {
-    if (!currentUser) return;
     const activeEditor = currentWorkspace === 'main' ? editor : homeEditor;
-    const content = activeEditor.value;
+    const key = currentWorkspace === 'main' ? STORAGE_KEY : STORAGE_HOME_KEY;
+
+    localStorage.setItem(key, activeEditor.value);
 
     if (currentScriptId) {
-        const { error } = await supabase.from('scripts').update({ content }).eq('id', currentScriptId);
-        if (error) alert(error.message);
-        else alert("💾 Atualizado!");
+        const { error } = await supabase
+            .from('scripts')
+            .update({ content: activeEditor.value })
+            .eq('id', currentScriptId);
+
+        if (error) alert("Erro ao atualizar: " + error.message);
+        else {
+            alert("💾 Script atualizado no banco de dados com sucesso!");
+            loadCustomScripts();
+        }
     } else {
-        alert("Use o botão '+ Novo' para salvar novos scripts permanentemente.");
+        alert("💾 Rascunho salvo no navegador!");
     }
 }
 
-document.getElementById("saveBtn").addEventListener("click", handleSave);
-document.getElementById("saveHomeBtn").addEventListener("click", handleSave);
+saveBtn.addEventListener("click", handleSave);
+saveHomeBtn.addEventListener("click", handleSave);
 
-// Gerenciar Listagem
+// Botões de Copiar
+async function handleCopy() {
+    const activeEditor = currentWorkspace === 'main' ? editor : homeEditor;
+    const activeBtn = currentWorkspace === 'main' ? copyBtn : copyHomeBtn;
+    try {
+        await navigator.clipboard.writeText(activeEditor.value);
+        const originalText = activeBtn.innerHTML;
+        activeBtn.innerHTML = "✅ Copiado!";
+        setTimeout(() => (activeBtn.innerHTML = originalText), 1400);
+    } catch (e) { alert("Erro ao copiar."); }
+}
+
+copyBtn.addEventListener("click", handleCopy);
+copyHomeBtn.addEventListener("click", handleCopy);
+
+// Botões de Excluir
+async function handleDelete() {
+    if (currentScriptId) {
+        if (confirm("⚠️ Excluir este script permanentemente?")) {
+            const { error } = await supabase.from('scripts').delete().eq('id', currentScriptId);
+            if (error) alert("Erro ao excluir: " + error.message);
+            else {
+                alert("Script excluído!");
+                const activeEditor = currentWorkspace === 'main' ? editor : homeEditor;
+                activeEditor.value = "";
+                currentScriptId = null;
+                loadCustomScripts();
+            }
+        }
+    } else {
+        if (confirm("Limpar editor?")) {
+            const activeEditor = currentWorkspace === 'main' ? editor : homeEditor;
+            activeEditor.value = "";
+            currentScriptId = null;
+        }
+    }
+}
+
+clearBtn.addEventListener("click", handleDelete);
+clearHomeBtn.addEventListener("click", handleDelete);
+
+// Gerenciar Scripts Laterais
+function createScriptButton(title, text, id, container) {
+    const btn = document.createElement("button");
+    btn.className = "script-btn custom-script-btn";
+    btn.textContent = title;
+    btn.addEventListener("click", () => insertText(text, id));
+    container.appendChild(btn);
+}
+
 async function loadCustomScripts() {
-    if (!currentUser) return;
+    // Limpa apenas os botões customizados dos asides
     document.querySelectorAll('.custom-script-btn').forEach(el => el.remove());
 
     const { data, error } = await supabase
         .from('scripts')
         .select('*')
-        .eq('user_id', currentUser.id) // FILTRO POR USUÁRIO
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: true })
+        .order('id', { ascending: true });
 
     if (error) return;
 
-    data.forEach((script, index) => {
-        const isHome = script.title.startsWith("[HOME]");
-        const container = isHome ? homeAside : mainAside;
+    const mainContainer = document.getElementById("mainAside");
+    const homeContainer = document.getElementById("homeAside");
 
-        if ((currentWorkspace === 'main' && !isHome) || (currentWorkspace === 'home' && isHome)) {
-            const btn = document.createElement("button");
-            btn.className = "script-btn custom-script-btn";
-            btn.textContent = script.title.replace("[HOME]", "").trim();
-            btn.addEventListener("click", () => insertText(script.content, script.id));
-            container.appendChild(btn);
+    let mainIndex = 1;
+    let homeIndex = 1;
+
+    data.forEach(script => {
+        const isHome = script.title.startsWith("[HOME]");
+
+        if (currentWorkspace === 'main' && !isHome) {
+            let cleanTitle = script.title.replace(/^\d+°\s*/, '');
+            createScriptButton(`${mainIndex}° ${cleanTitle}`, script.content, script.id, mainContainer);
+            mainIndex++;
+        } else if (currentWorkspace === 'home' && isHome) {
+            let cleanTitle = script.title.replace("[HOME]", "").trim();
+            createScriptButton(`${homeIndex}° ${cleanTitle}`, script.content, script.id, homeContainer);
+            homeIndex++;
         }
     });
 }
 
-// Novo Script (Popup)
+// NOVO SCRIPT (POPUP)
 const popupOverlay = document.getElementById("popupOverlay");
 const saveNewScriptBtn = document.getElementById("saveNewScriptBtn");
+const newScriptTitleInput = document.getElementById("newScriptTitle");
+const newScriptTextInput = document.getElementById("newScriptText");
 
-document.getElementById("newBtn").addEventListener("click", () => popupOverlay.style.display = "block");
-document.getElementById("newHomeBtn").addEventListener("click", () => popupOverlay.style.display = "block");
-document.getElementById("closePopupBtn").addEventListener("click", () => popupOverlay.style.display = "none");
+const openPopup = () => { popupOverlay.style.display = "block"; };
+document.getElementById("newBtn").addEventListener("click", openPopup);
+document.getElementById("newHomeBtn").addEventListener("click", openPopup);
+
+document.getElementById("closePopupBtn").addEventListener("click", () => {
+    popupOverlay.style.display = "none";
+});
 
 saveNewScriptBtn.addEventListener("click", async () => {
-    let title = document.getElementById("newScriptTitle").value.trim();
-    const content = document.getElementById("newScriptText").value.trim();
+    let title = newScriptTitleInput.value.trim();
+    const text = newScriptTextInput.value.trim();
 
-    if (currentWorkspace === 'home') title = "[HOME] " + title;
+    if (!title || !text) { alert("Preencha tudo!"); return; }
 
-    const { error } = await supabase.from('scripts').insert([{
-        title,
-        content,
-        user_id: currentUser.id // VINCULA AO USUÁRIO
-    }]);
+    // Adiciona prefixo se estiver na aba Home
+    if (currentWorkspace === 'home') {
+        title = "[HOME] " + title;
+    }
 
-    if (error) alert(error.message);
+    const { error } = await supabase.from('scripts').insert([{ title, content: text }]);
+
+    if (error) alert("Erro: " + error.message);
     else {
         popupOverlay.style.display = "none";
+        newScriptTitleInput.value = ""; newScriptTextInput.value = "";
         loadCustomScripts();
     }
 });
 
-// Inicialização
-window.addEventListener("load", async () => {
-    const { data } = await supabase.auth.getUser();
-    if (data.user) {
-        currentUser = data.user;
-        showApp();
-    } else {
-        hideApp();
-    }
-});
-
-/* --- POPUP DO SINO (GLOBAL) --- */
+/* --- POPUP DO SINO (APENAS NA MAIN) --- */
 const dailyBtn = document.getElementById("dailyBtn");
 const dailyPopup = document.getElementById("dailyPopup");
 const dailyMessage = document.getElementById("dailyMessage");
@@ -239,7 +227,22 @@ async function loadDailyMessage() {
 dailyBtn.addEventListener("click", () => dailyPopup.classList.remove("hidden"));
 document.getElementById("closeDailyPopup").addEventListener("click", () => dailyPopup.classList.add("hidden"));
 document.getElementById("saveDailyMsg").addEventListener("click", async () => {
-    await supabase.from('daily_messages').insert([{ content: dailyMessage.value }]);
+    const text = dailyMessage.value.trim();
+    await supabase.from('daily_messages').insert([{ content: text }]);
+    currentDailyMessage = text;
     dailyPopup.classList.add("hidden");
+    if (text) dailyBtn.classList.add("has-remember");
+    else dailyBtn.classList.remove("has-remember");
+});
+
+// INICIALIZAÇÃO
+window.addEventListener("load", () => {
+    loadCustomScripts();
     loadDailyMessage();
 });
+
+// SOM DE ALERTA
+const bellSound = new Audio("/alerta.mp3");
+setInterval(() => {
+    if (currentDailyMessage.trim()) bellSound.play().catch(() => { });
+}, 900000);
